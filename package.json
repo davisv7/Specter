@@ -3,16 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "electron": "^4.1.4",
+    "electron-builder": "^20.39.0",
+    "foreman": "^3.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8"
   },
   "scripts": {
+    "dev": "nf start",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "ebuild":"yarn build && node_modules/.bin/build"
+	},
+	  "description": "Decentralized chat app.",
+	  "homepage":"./",
+	  "main":"electron/main.js",
+	  "build":{
+	  "productName":"Specter",
+	  "appId":"com.specter.electron",
+	  "electronVersion":"4.1.4",
+	  "files":[
+		  "build/**/*",
+		  "electron/*"
+	  ]
+	  },
+	
+  
   "eslintConfig": {
     "extends": "react-app"
   },
