@@ -21,6 +21,7 @@ function createWindow () {
         slashes: true
     });
     win.loadURL(startUrl);
+    win.webContents.openDevTools();
 
 
   // Emitted when the window is closed.
