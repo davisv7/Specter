@@ -1,9 +1,9 @@
 import React from 'react';
 import Messages from './Messages';
 import ChatInput from './ChatInput';
+import Peers from './Peers';
 import IPFS from 'ipfs';
 import Room from 'ipfs-pubsub-room';
-
 require('./styles/ChatApp.css');
 
 
@@ -19,7 +19,7 @@ class ChatApp extends React.Component {
             messages: [],
             info: null,
             room: null,
-
+            peers:[]
         };
         this.sendHandler = this.sendHandler.bind(this);
 
@@ -32,41 +32,60 @@ class ChatApp extends React.Component {
             config: {
                 Addresses: {
                     Swarm: [
-                    '//dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star']
+                    "/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star",
+                    ]
                 }
             }
         })
-        console.log('constructor');
     }
 
 
     componentWillMount() {
-        console.log('componentwillmount');
+
                 // now started to listen to room
+        try{
             this.ipfs.once('ready', () => this.ipfs.id((err, info) => {
+                this.setState({
+                    info
+                })
             this.room = Room(this.ipfs, 'room-name');
 
             //            setInterval(() => this.sendHandler('hey everyone!'), 2000);
 
             this.room.on('peer joined', (peer) => {
                 // Notify Peer has Joined
+                this.addPeer(peer);
                 console.log(peer + ' has joined');
-//                this.room.sendTo(peer, 'Hello ' + peer + '!');
+                const messageObject = {
+                    username: this.props.username,
+                    message:"hello " +peer+'!'
+                };
+                this.room.sendTo(peer, Buffer.from(JSON.stringify(messageObject)));
             });
 
             this.room.on('peer left', (peer) => {
                 // Notify Peer has Left
+                this.removeMessages(peer);
+                this.removePeer(peer);
                 console.log(peer + ' has left');
             });
 
             this.room.on('message', (new_message) => {
                 //                console.log(this.ipfs);
                 const message = JSON.parse(new_message.data.toString());
-                if (!(message.username === this.props.username)) {
+                if (message.username === this.props.username) {
+                    message.fromMe = true;
+                    this.addMessage(message);
+                    return;
+
+                }
+                else if(new_message.from !== message.username ){
                     message.fromMe = false;
                     this.addMessage(message);
+                    this.removePeer(new_message.from);
+                    this.addPeer(new_message.from,message)
                 }
-                console.log(message.username, this.props.username);
+
             });
 
             // now started to listen to room
@@ -75,21 +94,52 @@ class ChatApp extends React.Component {
             });
 
         }))
+    }  catch(err) {
+    console.error('Failed to initialize peer', err)
+        
     }
+    }
+    
+    
+    removePeer(peer){
+        const peers = this.state.peers.filter((pear, index, arr)=>{
+            return pear.rkey !== peer;
+        });
+//        console.log(peers);
+        this.setState({
+            peers
+        });
+    }
+    
+    removeMessages(peer){
+        
 
 
-
+        const actualPeer = this.state.peers.find((pear, index, array) =>{
+            return (pear.rkey === peer);
+        });
+        
+        
+        const messages = this.state.messages.filter((message, index, arr)=>{
+            return message.username !== actualPeer.username;
+        });
+//        console.log(messages);
+        this.setState({
+            messages
+        });
+    }
 
 
 
     sendHandler(message) {
         const messageObject = {
             username: this.props.username,
+            rkey: this.state.info.id,
             message
         };
 
         messageObject.fromMe = true;
-        this.addMessage(messageObject);
+//        this.addMessage(messageObject);
 
         this.room.broadcast(Buffer.from(JSON.stringify(messageObject)));
     }
@@ -102,21 +152,42 @@ class ChatApp extends React.Component {
             messages
         });
     }
+    
+    addPeer(peer,message=0){
+        var peers = this.state.peers;
+        var peerObject={};
+        if (message!==0){
+            peerObject = {
+            rkey: peer,
+            username:message.username 
+            };
+        } else {
+            peerObject = {
+                rkey: peer,
+                username: peer
+            };
+        }
+        peers.push(peerObject);
+        this.setState({
+            peers
+        });
+    }
+    
+    
 
     render() {
-        return ( <
-            div className = "container" >
-            <
-            h3 > React Chat App < /h3>  <
-            Messages messages = {
+        return ( <div className = "container" >
+            <h3 > Specter Distributed Chat < /h3>
+            <Peers peers = {
+                this.state.peers
+                } />
+            <Messages messages = {
                 this.state.messages
-            }
-            />  <
-            ChatInput onSend = {
+            }/>
+            <ChatInput onSend = {
                 this.sendHandler
-            }
-            />  < /
-            div >
+            }/> 
+                </div>
         );
     }
 
