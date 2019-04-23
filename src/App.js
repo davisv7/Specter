@@ -40,7 +40,8 @@ class App extends React.Component {
             type="text"
             onChange={this.usernameChangeHandler}
             placeholder="Enter a username..."
-            required />
+//            required />
+        />
         </div>
         <input type="submit" value="Submit" />
       </form>

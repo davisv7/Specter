@@ -16,6 +16,8 @@ class ChatApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            ready:false,
+            identity:null,
             messages: [],
             info: null,
             room: null,
@@ -46,7 +48,9 @@ class ChatApp extends React.Component {
         try{
             this.ipfs.once('ready', () => this.ipfs.id((err, info) => {
                 this.setState({
-                    info
+                    info,
+                    ready:true,
+                    identity:info.id
                 })
             this.room = Room(this.ipfs, 'room-name');
 
@@ -54,8 +58,8 @@ class ChatApp extends React.Component {
 
             this.room.on('peer joined', (peer) => {
                 // Notify Peer has Joined
-                this.addPeer(peer);
                 console.log(peer + ' has joined');
+                this.addPeer(peer);
                 const messageObject = {
                     username: this.props.username,
                     message:"hello " +peer+'!'
@@ -65,15 +69,14 @@ class ChatApp extends React.Component {
 
             this.room.on('peer left', (peer) => {
                 // Notify Peer has Left
+                console.log(peer + ' has left');
                 this.removeMessages(peer);
                 this.removePeer(peer);
-                console.log(peer + ' has left');
             });
 
             this.room.on('message', (new_message) => {
-                //                console.log(this.ipfs);
                 const message = JSON.parse(new_message.data.toString());
-                if (message.username === this.props.username) {
+                if (message.rkey === this.state.identity) {
                     message.fromMe = true;
                     this.addMessage(message);
                     return;
@@ -95,9 +98,9 @@ class ChatApp extends React.Component {
 
         }))
     }  catch(err) {
-    console.error('Failed to initialize peer', err)
+            console.error('Failed to initialize peer', err)
         
-    }
+        }
     }
     
     
@@ -105,7 +108,6 @@ class ChatApp extends React.Component {
         const peers = this.state.peers.filter((pear, index, arr)=>{
             return pear.rkey !== peer;
         });
-//        console.log(peers);
         this.setState({
             peers
         });
@@ -113,17 +115,14 @@ class ChatApp extends React.Component {
     
     removeMessages(peer){
         
-
-
         const actualPeer = this.state.peers.find((pear, index, array) =>{
             return (pear.rkey === peer);
         });
         
-        
         const messages = this.state.messages.filter((message, index, arr)=>{
             return message.username !== actualPeer.username;
         });
-//        console.log(messages);
+        
         this.setState({
             messages
         });
@@ -140,8 +139,10 @@ class ChatApp extends React.Component {
 
         messageObject.fromMe = true;
 //        this.addMessage(messageObject);
+        if (this.state.ready){
+            this.room.broadcast(Buffer.from(JSON.stringify(messageObject)));
 
-        this.room.broadcast(Buffer.from(JSON.stringify(messageObject)));
+        }
     }
 
     addMessage(message) {
