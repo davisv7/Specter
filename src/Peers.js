@@ -17,7 +17,7 @@ class Peers extends React.Component {
         );
       });
     return (
-      <Collapsible trigger= {peers.length.toString().concat("Peers")}>
+      <Collapsible trigger= {"Peers (".concat(peers.length.toString()).concat(")")}>
           <div className='peers' id='peerList'>
             { peers }
           </div>
