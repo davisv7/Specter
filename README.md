@@ -1,16 +1,19 @@
 *This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).*
 
+*Currently this web app can only be ran on Chrome.*
+
 ## Available Scripts
 
 In the project directory, you can run:
 
-###  yarn install
+###   `yarn install`
+
 grabs all dependecies
 
 ### `yarn run dev`
 
 Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:5000) to view it in the browser.
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
@@ -25,9 +28,9 @@ Your app is ready to be deployed!
 
 ### Deployment
 
-yarn add global serve
+`yarn add global serve`
 
-serve -s build
+`serve -s build`
 
 ## Learn More
 
@@ -35,5 +38,7 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### This project may be hosted at specter-381123.appspot.com
-### Check it out!
+###  This project may be hosted at [specter-238321.appspot.com]([https://specter-238321.appspot.com](https://specter-238321.appspot.com/))
+###  Check it out!
+
+
