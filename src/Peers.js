@@ -5,9 +5,8 @@ import Collapsible from 'react-collapsible';
 
 
 class Peers extends React.Component {
-
   render() {
-    // Loop through all the messages in the state and create a Message component
+    // Loop through all the peers in the state and create a Peer component
     const peers = this.props.peers.map((peer, i) => {
         return (
           <Peer
