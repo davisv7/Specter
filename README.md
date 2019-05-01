@@ -4,7 +4,7 @@
 
 In the project directory, you can run:
 
-### yarn install
+###  yarn install
 grabs all dependecies
 
 ### `yarn run dev`
@@ -26,6 +26,7 @@ Your app is ready to be deployed!
 ### Deployment
 
 yarn add global serve
+
 serve -s build
 
 ## Learn More
