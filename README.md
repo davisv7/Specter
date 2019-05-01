@@ -38,7 +38,7 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-###  This project may be hosted at [specter-238321.appspot.com]([https://specter-238321.appspot.com](https://specter-238321.appspot.com/))
+###  This project may be hosted at [specter-238321.appspot.com](https://specter-238321.appspot.com)
 ###  Check it out!
 
 
