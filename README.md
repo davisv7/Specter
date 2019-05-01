@@ -2,8 +2,6 @@
 
 *Currently this web app can only be ran on Chrome.*
 
-
-Code 
 ## Available Scripts
 
 In the project directory, you can run:
@@ -46,4 +44,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Resources Used
 
 [https://github.com/ipfs-shipyard/ipfs-pubsub-room-demo](https://github.com/ipfs-shipyard/ipfs-pubsub-room-demo)
+
 [Medium Article](https://medium.com/@coderacademy/you-can-build-an-fb-messenger-style-chat-app-with-reactjs-heres-how-intermediate-211b523838ad)
